@@ -21,6 +21,10 @@ def shove(umbrella_path):
             if check_ignore_process.returncode == 0:
                 continue
 
+            has_unpushed_commits = int(subprocess.check_output(['git', 'rev-list', '@..@{u}', '--count'], cwd=os.path.dirname(repo), encoding='utf-8').strip()) != 0
+            if not has_unpushed_commits:
+                continue
+
         process = subprocess.Popen(['git', 'push'], cwd=repo, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         stdout, stderr = process.communicate()
         if process.returncode != 0:
